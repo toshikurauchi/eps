@@ -8,6 +8,7 @@ from PriorityQueue import PriorityQueue
 from definitions import INFINITY
 
 class DStar:
+    # Cria uma matriz rows X cols com estados inicializados
     def init_matrix(self):
         self.states = [0]*self.rows
         for i in range(self.rows):
@@ -24,7 +25,7 @@ class DStar:
         self.init_matrix()
         self.states[Init.row][Init.col] = Init
         self.states[G.row][G.col] = G
-        self.insert(G, 0)
+        self.insert(G, 0) # Insere G na OPEN list para iniciar a execucao do algoritmo
     
     def minState(self):
         return self.open.first()
@@ -48,12 +49,14 @@ class DStar:
         x.t = "OPEN"
         self.open.placeOrReposition(x)
     
+    # Devolve uma lista com os vizinhos de x na matriz de estados
     def neighborsOf(self, x):
         neighbours = []
         for neighbour in x.neighbours:
             neighbours.append(self.states[neighbour.row][neighbour.col])
         return neighbours
     
+    # Funcao escrita de acordo com o artigo de Anthony Stentz
     def processState(self):
         x = self.minState()
         if x is None:
@@ -83,6 +86,7 @@ class DStar:
                             self.insert(y, y.h)
         return self.getKMin()
         
+    # Funcao escrita de acordo com o artigo de Anthony Stentz
     def modifyCost(self, x, y, cVal):
         x.modifyCost(y, cVal)
         if x.t == "CLOSED":

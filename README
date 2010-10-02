@@ -1,15 +1,19 @@
-Para rodar o programa basta rodar python Main.py <input file name> (<output file name>)
+Andrew Toshiaki Nakayama Kurauchi
+nusp: 5894035
+
+Para rodar o programa basta rodar `python Main.py <input file name> [<output file name>]` no terminal (Linux).
 Onde <filename> é o nome do arquivo de entrada, que deve ser da seguinte forma:
 
-<linha do estado inicial> <coluna do estado inicial>
-<linha do alvo> <coluna do alvo>
 <n = número de barreiras>
 <linha da barreira 1> <coluna da barreira 1>
 <linha da barreira 2> <coluna da barreira 2>
 ...
 <linha da barreira n> <coluna da barreira n>
+<linha do estado inicial> <coluna do estado inicial>
+<linha do alvo> <coluna do alvo>
 
 O arquivo não deve conter linhas em branco.
+Se <linha do estado inicial>=-1 e <coluna do estado inicial>=-1 a posição do estado inicial será sorteada aleatoriamente. O mesmo vale para <linha do alvo>=-1 e <coluna do alvo>=-1.
 
 Exemplo de arquivo de entrada:
 0 0
@@ -23,4 +27,11 @@ Tais posições são referentes à matriz 16x16 iniciada em (0,0) no canto super
 É possível também especificar um arquivo de saída (<output file name>) como parâmetro opcional. Nesse arquivo será gravado o mapa com todas as posições pelas quais o robô passou durante o seu percurso.
 
 Todos os passos detalhados, são guardados em dStar.log após cada execução. Esse arquivo é sobrescrito a cada nova execução do programa.
-Espaços em branco representam espaços vazios, '@'s representam barreiras, 'R', a posição do robô e 'G', o alvo.
+
+Legenda:
+ - Espaços em branco (' ') = espaços vazios;
+ - '@'                     = barreiras;
+ - 'R'                     = posição do robô;
+ - 'G'                     = o alvo.
+ 
+As explicações sobre o funcionamento do programa são fornecidas na forma de comentários ao longo do código-fonte.

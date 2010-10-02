@@ -5,7 +5,9 @@ Created on Oct 2, 2010
 '''
 rows = 16
 cols = 16
+
 INFINITY = 9999999
+
 ROBOT = 'R'
 GOAL = 'G'
 EMPTY = ' '
