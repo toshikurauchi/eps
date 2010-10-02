@@ -4,7 +4,7 @@ Created on Sep 30, 2010
 @author: Andrew Toshiaki Nakayama Kurauchi
 '''
 from Dstar import DStar
-from definitions import INFINITY
+from definitions import INFINITY, EMPTY, ROBOT
 
 def printMatrix(matrix):
     for i in range(len(matrix)):
@@ -17,8 +17,6 @@ class Robot:
         self.dStar = DStar(Init, self.G)
         self.x = Init
         self.map = map
-        self.map[Init.row][Init.col] = 2
-        self.map[self.G.row][self.G.col] = 3
 
     def firstSteps(self):
         while self.x.t != "CLOSED":
@@ -34,8 +32,8 @@ class Robot:
     def step(self):
         y = self.x.b
         while not self.isFinished() and self.map[y.row][y.col] != 1:
-            self.map[self.x.row][self.x.col] = 0
-            self.map[y.row][y.col] = 2
+            self.map[self.x.row][self.x.col] = EMPTY
+            self.map[y.row][y.col] = ROBOT
             printMatrix(self.map)
             print " "
             self.x = y
