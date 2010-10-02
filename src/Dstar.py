@@ -5,6 +5,7 @@ Created on Sep 28, 2010
 '''
 from State import State
 from PriorityQueue import PriorityQueue
+from definitions import INFINITY
 
 class DStar:
     def init_matrix(self):
@@ -33,6 +34,7 @@ class DStar:
     
     def delete(self, x):
         x.t = "CLOSED"
+        x.k = INFINITY
         self.open.delete(x)
     
     def insert(self, x, hNew):
@@ -63,7 +65,7 @@ class DStar:
                 if y.h <= kOld and x.h > y.h + y.c(x):
                     x.b = y
                     x.h = y.h + y.c(x)
-        elif kOld == x.h:
+        if kOld == x.h:
             for y in self.neighborsOf(x):
                 if y.t == "NEW" or (y.b == x and y.h != x.h + x.c(y)) or (y.b != x and y.h > x.h + x.c(y)):
                     y.b = x

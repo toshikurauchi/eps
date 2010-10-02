@@ -3,10 +3,7 @@ Created on Sep 28, 2010
 
 @author: Andrew Toshiaki Nakayama Kurauchi
 '''
-
-rows = 16
-cols = 16
-INFINITY = 9999999
+from definitions import INFINITY, rows, cols
 
 class State:
     def __init__(self, row, col):
