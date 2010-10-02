@@ -7,6 +7,7 @@ from Robot import Robot
 from definitions import rows, cols, ROBOT, GOAL, EMPTY, OBSTACLE
 from State import State
 import sys
+from Logger import LOGGER
 
 map = [0]*rows
 for i in range(rows):
@@ -45,10 +46,19 @@ while nLines:
     col = int(coordinates[1])
     map[row][col] = OBSTACLE
     nLines -= 1
-    
-for i in range(16):
-    print map[i]
 
+input.close()
+log = LOGGER()
+log.startLog()
+    
 # Executa o algoritmo
-robot = Robot(map, Init, G)
+robot = Robot(map, Init, G, log)
 robot.move()
+
+log.endLog()
+
+if len(sys.argv) > 2:
+    output = open(sys.argv[2], "w")
+    for line in robot.path:
+        output.write(str(line)+"\n")
+    output.close()

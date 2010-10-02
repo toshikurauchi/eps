@@ -1,1 +1,26 @@
-Os EPs devem ser feitos em branches. A master a principio nao sera utilizada para nada.
+Para rodar o programa basta rodar python Main.py <input file name> (<output file name>)
+Onde <filename> é o nome do arquivo de entrada, que deve ser da seguinte forma:
+
+<linha do estado inicial> <coluna do estado inicial>
+<linha do alvo> <coluna do alvo>
+<n = número de barreiras>
+<linha da barreira 1> <coluna da barreira 1>
+<linha da barreira 2> <coluna da barreira 2>
+...
+<linha da barreira n> <coluna da barreira n>
+
+O arquivo não deve conter linhas em branco.
+
+Exemplo de arquivo de entrada:
+0 0
+15 15
+2
+1 0
+1 1
+
+Tais posições são referentes à matriz 16x16 iniciada em (0,0) no canto superior esquerdo.
+
+É possível também especificar um arquivo de saída (<output file name>) como parâmetro opcional. Nesse arquivo será gravado o mapa com todas as posições pelas quais o robô passou durante o seu percurso.
+
+Todos os passos detalhados, são guardados em dStar.log após cada execução. Esse arquivo é sobrescrito a cada nova execução do programa.
+Espaços em branco representam espaços vazios, '@'s representam barreiras, 'R', a posição do robô e 'G', o alvo.
