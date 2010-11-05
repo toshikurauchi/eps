@@ -45,6 +45,8 @@ group_controller(L) ->
 	    group_controller(NewL);
 	{chan_closed, C} ->
 	    {Nick, L1} = delete(C, L, []),
+	    Nicks = nicksList(L1,[]),
+	    foreach(fun({Pid,_}) -> send(Pid, {resetList,C,Nicks}) end, L1),
 	    self() ! {chan, C, {relay, Nick, "I'm leaving the group"}},
 	    group_controller(L1);
 	Any ->
