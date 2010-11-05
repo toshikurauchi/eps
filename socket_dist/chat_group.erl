@@ -41,9 +41,11 @@ group_controller(L) ->
 	    NewL = [{C,Nick}|L],
 	    Nicks = nicksList(NewL,[]),
 	    foreach(fun({Pid,_}) -> send(Pid, {resetList,C,Nicks}) end, NewL),
+	    % Sets groups list for this user
 	    send(C, {refreshGroups,Groups}),
 	    self() ! {chan, C, {relay, Nick, "I'm joining the group"}},
 	    group_controller(NewL);
+	% Refreshes groups list for all users
 	{refreshGroups, Groups} ->
 	    foreach(fun({Pid,_}) -> send(Pid, {refreshGroups,Groups}) end, L),
 	    group_controller(L);

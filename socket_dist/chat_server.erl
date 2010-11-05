@@ -33,6 +33,7 @@ server_loop(L) ->
 	{mm, Channel, {login, Group, Nick}} ->
 	    case lookup(Group, L) of
 		{ok, Pid} ->
+		    % Login and set groups list
 		    Pid ! {login, Channel, Nick, list_groups(L,[])},
 		    server_loop(L);
 		error ->
@@ -41,6 +42,7 @@ server_loop(L) ->
 				     end),
 				NewL = [{Group,Pid}|L],
 				Groups = list_groups(NewL,[]),
+				% Tell all groups to update groups list
 				foreach(fun({_Group, Pid}) -> Pid ! {refreshGroups, Groups} end,NewL),
 		    server_loop(NewL)
 	    end;
@@ -48,6 +50,8 @@ server_loop(L) ->
 	    server_loop(L); 
 	{'EXIT', Pid, allGone} ->
 	    L1 = remove_group(Pid, L),
+	    % Tell all groups to update groups list
+	    foreach(fun({_Group, Pid}) -> Pid ! {refreshGroups, list_groups(L1,[])} end,L1),
 	    server_loop(L1);
 	Msg ->
 	    io:format("Server received Msg=~p~n",
