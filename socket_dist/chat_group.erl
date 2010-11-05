@@ -35,14 +35,18 @@ group_controller(L) ->
 	{chan, C, {relay, Nick, Str}} ->
 	    foreach(fun({Pid,_}) -> send(Pid, {msg,Nick,C,Str}) end, L),
 	    group_controller(L);
-	{login, C, Nick} ->
+	{login, C, Nick, Groups} ->
 	    controller(C, self()),
 	    send(C, ack),
 	    NewL = [{C,Nick}|L],
 	    Nicks = nicksList(NewL,[]),
 	    foreach(fun({Pid,_}) -> send(Pid, {resetList,C,Nicks}) end, NewL),
+	    send(C, {refreshGroups,Groups}),
 	    self() ! {chan, C, {relay, Nick, "I'm joining the group"}},
 	    group_controller(NewL);
+	{refreshGroups, Groups} ->
+	    foreach(fun({Pid,_}) -> send(Pid, {refreshGroups,Groups}) end, L),
+	    group_controller(L);
 	{chan_closed, C} ->
 	    {Nick, L1} = delete(C, L, []),
 	    Nicks = nicksList(L1,[]),

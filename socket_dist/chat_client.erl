@@ -10,7 +10,7 @@
 
 -import(io_widget, 
 	[get_state/1, insert_str/2, set_prompt/2, set_state/2, 
-	 set_title/2, set_handler/2, update_state/3, set_nicks/2]).
+	 set_title/2, set_handler/2, update_state/3, set_nicks/2, set_groups/2]).
 
 -export([start/0, test/0, connect/5]).
 
@@ -23,7 +23,11 @@ test() ->
     connect("localhost", 2223, "AsDT67aQ", "general", "joe"),
     connect("localhost", 2223, "AsDT67aQ", "general", "jane"),
     connect("localhost", 2223, "AsDT67aQ", "general", "jim"),
-    connect("localhost", 2223, "AsDT67aQ", "general", "sue").
+    connect("localhost", 2223, "AsDT67aQ", "general", "sue"),
+    connect("localhost", 2223, "AsDT67aQ", "group1", "james"),
+    connect("localhost", 2223, "AsDT67aQ", "group1", "jessie"),
+    connect("localhost", 2223, "AsDT67aQ", "group1", "jorge"),
+    connect("localhost", 2223, "AsDT67aQ", "group1", "sam").
 	   
 
 connect(Host, Port, HostPsw, Group, Nick) ->
@@ -81,6 +85,9 @@ active(Widget, MM) ->
 	     active(Widget, MM);
 	 {chan, MM, {resetList,C,Nicks}} ->
 	     set_nicks(Widget, Nicks),
+	     active(Widget, MM);
+	 {chan, MM, {refreshGroups, Groups}} ->
+	     set_groups(Widget, Groups),
 	     active(Widget, MM);
 	 {'EXIT',Widget,windowDestroyed} ->
 	     lib_chan_mm:close(MM);

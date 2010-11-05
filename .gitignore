@@ -1,1 +1,3 @@
 *.beam
+socket_dist/erl_crash.dump
+

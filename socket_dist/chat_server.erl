@@ -9,7 +9,7 @@
 
 -module(chat_server).
 -import(lib_chan_mm, [send/2, controller/2]).
--import(lists, [delete/2, foreach/2, map/2, member/2,reverse/2]).
+-import(lists, [delete/2, foreach/2, map/2, member/2,reverse/2, foreach/2]).
 
 -compile(export_all).
 
@@ -33,13 +33,16 @@ server_loop(L) ->
 	{mm, Channel, {login, Group, Nick}} ->
 	    case lookup(Group, L) of
 		{ok, Pid} ->
-		    Pid ! {login, Channel, Nick},
+		    Pid ! {login, Channel, Nick, list_groups(L,[])},
 		    server_loop(L);
 		error ->
 		    Pid = spawn_link(fun() ->
 					     chat_group:start(Channel, Nick) 
 				     end),
-		    server_loop([{Group,Pid}|L])
+				NewL = [{Group,Pid}|L],
+				Groups = list_groups(NewL,[]),
+				foreach(fun({_Group, Pid}) -> Pid ! {refreshGroups, Groups} end,NewL),
+		    server_loop(NewL)
 	    end;
 	{mm_closed, _} ->
 	    server_loop(L); 
@@ -61,4 +64,7 @@ lookup(_,[])           -> error.
 remove_group(Pid, [{G,Pid}|T]) -> io:format("~p removed~n",[G]), T;
 remove_group(Pid, [H|T])       -> [H|remove_group(Pid, T)];
 remove_group(_, [])            -> [].
+
+list_groups([], Groups)            -> Groups;
+list_groups([{G, _Pid}|T], Groups) -> list_groups(T, [G|Groups]).
 
