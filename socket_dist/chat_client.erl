@@ -10,7 +10,7 @@
 
 -import(io_widget, 
 	[get_state/1, insert_str/2, set_prompt/2, set_state/2, 
-	 set_title/2, set_handler/2, update_state/3, set_users/2]).
+	 set_title/2, set_handler/2, update_state/3, set_nicks/2]).
 
 -export([start/0, test/0, connect/5]).
 
@@ -36,7 +36,7 @@ handler(Host, Port, HostPsw, Group, Nick) ->
     set_state(Widget, Nick),
     set_prompt(Widget, [Nick, " > "]),
     set_handler(Widget, fun parse_command/1),
-    set_users(Widget, [Nick]),
+    set_nicks(Widget, [Nick]),
     start_connector(Host, Port, HostPsw),    
     disconnected(Widget, Group, Nick).
 
@@ -78,6 +78,9 @@ active(Widget, MM) ->
 	     active(Widget, MM);
 	 {chan, MM, {msg, From, Pid, Str}} ->
 	     insert_str(Widget, [From,"@",pid_to_list(Pid)," ", Str, "\n"]),
+	     active(Widget, MM);
+	 {chan, MM, {resetList,C,Nicks}} ->
+	     set_nicks(Widget, Nicks),
 	     active(Widget, MM);
 	 {'EXIT',Widget,windowDestroyed} ->
 	     lib_chan_mm:close(MM);

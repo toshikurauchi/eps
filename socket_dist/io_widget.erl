@@ -13,7 +13,7 @@
 	 set_handler/2, 
 	 set_prompt/2,
 	 set_state/2,
-	 set_title/2, set_nicks/2, insert_nick/2, remove_nick/2, insert_str/2, update_state/3]).
+	 set_title/2, set_nicks/2, insert_str/2, update_state/3]).
 
 start(Pid) ->
     gs:start(),
@@ -26,10 +26,6 @@ set_prompt(Pid, Str)    -> Pid ! {prompt, Str}.
 set_state(Pid, State)   -> Pid ! {state, State}.
 % Sets users' names list
 set_nicks(Pid, Nicks)   -> Pid ! {nicksList, Nicks}.
-% Adds a new nick to the nicks list
-insert_nick(Pid, Nick)  -> Pid ! {insertNick, Nick}.
-% Removes a nick from the nicks list
-remove_nick(Pid, Nick)  -> Pid ! {removeNick, Nick}.
 insert_str(Pid, Str)    -> Pid ! {insert, Str}.
 update_state(Pid, N, X) -> Pid ! {updateState, N, X}. 
 
@@ -81,18 +77,8 @@ loop(Win, Pid, Prompt, State, Parse) ->
 	    loop(Win, Pid, Prompt, State, Parse);
 	% Sets nicks list
 	{nicksList, Nicks} ->
+	    gs:config(nicks, clear),
 	    gs:config(nicks, [{items, Nicks}]),
-	    loop(Win, Pid, Prompt, State, Parse);
-	% Adds a new nick to the list
-	%TODO
-	{insertNick, Nick} ->
-	    gs:config(nicks, {add, Nick}),
-	    loop(Win, Pid, Prompt, State, Parse);
-	% Removes a nick from the list
-	%TODO
-	{removeNick, Nick} ->
-	    Index = 
-	    gs:config(nicks, {del, Index}),
 	    loop(Win, Pid, Prompt, State, Parse);
 	{updateState, N, X} ->
 	    io:format("setelemtn N=~p X=~p Satte=~p~n",[N,X,State]),
