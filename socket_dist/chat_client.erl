@@ -77,8 +77,13 @@ wait_login_response(Widget, MM) ->
 
 active(Widget, MM) ->
      receive
-	 {Widget, Nick, Str} ->
-	     lib_chan_mm:send(MM, {relay, Nick, Str}),
+	 {Widget, Nick, Str, To} ->
+	     io:format("To!!!! ~p~n",[To]),
+	     if To == [] ->
+    	      lib_chan_mm:send(MM, {relay, Nick, Str});
+    	    true ->
+    	      lib_chan_mm:send(MM, {personal, Nick, Str, To})
+    	 end,
 	     active(Widget, MM);
 	 {chan, MM, {msg, From, Pid, Str}} ->
 	     insert_str(Widget, [From,"@",pid_to_list(Pid)," ", Str, "\n"]),

@@ -35,6 +35,10 @@ group_controller(L) ->
 	{chan, C, {relay, Nick, Str}} ->
 	    foreach(fun({Pid,_}) -> send(Pid, {msg,Nick,C,Str}) end, L),
 	    group_controller(L);
+	% Sends a personal message
+	{chan, C, {personal, Nick, Str, To}} ->
+	    foreach(fun(Receiver) -> send(find_by_nick(L,Receiver), {msg,Nick,C,Str}) end, To),
+	    group_controller(L);
 	{login, C, Nick, Groups} ->
 	    controller(C, self()),
 	    send(C, ack),
@@ -63,3 +67,10 @@ group_controller(L) ->
 nicksList([], Nicks)              -> Nicks;
 nicksList([{_Pid,Nick}|T], Nicks) -> nicksList(T, [Nick|Nicks]).
 
+% Returns Pid of the Receiver
+find_by_nick([],Receiver) ->
+    self();
+find_by_nick([{Pid,Receiver}|_T],Receiver) ->
+    Pid;
+find_by_nick([{_Pid,_Nick}|T],Receiver) ->
+    find_by_nick(T,Receiver).

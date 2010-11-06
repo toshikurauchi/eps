@@ -49,7 +49,7 @@ widget(Pid) ->
     % List of the names of the users in the current group
     gs:create(listbox, nicks, packer, [{pack_x,2},{pack_y,1},{vscroll,right}]),
     gs:create(listbox, groups, packer, [{pack_x,3},{pack_y,{1,3}},{vscroll,right}]),
-    gs:button(packer,[{label,{text,"Deselect"}},{pack_xy,{2,2}}]),
+    gs:button(deselect, packer,[{label,{text,"Deselect"}},{pack_xy,{2,2}}]),
     gs:config(packer, Size),
     Prompt = " > ",
     State = nil,
@@ -100,9 +100,10 @@ loop(Win, Pid, Prompt, State, Parse) ->
 	    %% io:format("Read:~p~n",[Text]),
 	    gs:config(entry, {delete,{0,last}}),
 	    gs:config(entry, {insert,{0,Prompt}}),
+	    To = get_nicks(gs:read(nicks, selection)),
 	    try Parse(Text) of
 		Term ->
-		    Pid ! {self(), State, Term}
+		    Pid ! {self(), State, Term, To}
 	    catch
 		_:_ ->
 		    self() ! {insert, "** bad input**\n** /h for help\n"}
@@ -112,6 +113,9 @@ loop(Win, Pid, Prompt, State, Parse) ->
 	    gs:config(packer, [{width,W},{height,H}]),
 	    loop(Win, Pid, Prompt, State, Parse);
 	{gs, entry,keypress,_,_} ->
+	    loop(Win, Pid, Prompt, State, Parse);
+	{gs,deselect,click,_,_} ->
+	    gs:config(nicks, {selection, clear}),
 	    loop(Win, Pid, Prompt, State, Parse);
 	Any ->
 	    io:format("Discarded:~p~n",[Any]),
@@ -146,7 +150,10 @@ loop(W) ->
 parse(Str) ->
     {str, Str}.
 
-    
+get_nicks(Indices) -> get_nicks(Indices, []).
+
+get_nicks([],Nicks) -> Nicks;
+get_nicks([Index|T],Nicks) -> get_nicks(T,[gs:read(nicks,{get,Index})|Nicks]).    
     
     
 		  
