@@ -37,7 +37,18 @@ group_controller(L) ->
 	    group_controller(L);
 	% Sends a personal message
 	{chan, C, {personal, Nick, Str, To}} ->
-	    foreach(fun(Receiver) -> send(find_by_nick(L,Receiver), {msg,Nick,C,Str}) end, To),
+	    % Sends msg to the Receiver, unless Receiver == Nick
+	    foreach(
+	      fun(Receiver) -> 
+	        if Receiver /= Nick ->
+  	           send(find_by_nick(L,Receiver), {msg,Nick,C,Str});
+  	         true ->
+  	           io:format("~p sent message to himself~n",[Receiver])
+  	      end
+	      end,
+	      To),
+	    % Writes message in sender's (Nick) window
+	    send(find_by_nick(L,Nick), {msg,Nick,C,Str}),
 	    group_controller(L);
 	{login, C, Nick, Groups} ->
 	    controller(C, self()),
