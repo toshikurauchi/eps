@@ -1,1 +1,18 @@
-Os EPs devem ser feitos em branches. A master a principio nao sera utilizada para nada.
+Andrew Toshiaki Nakayama Kurauchi nusp: 5894035
+
+EP2 - Programação Funcional Contemporânea
+
+Para compilar basta rodar o comando '$make' no diretório ep2-andrew.
+Para executar o servidor basta rodar o comando '$make chat_server' no diretório ep2-andrew/socket_dist.
+Para executar o cliente basta rodar o comando '$make chat_client' no diretório ep2-andrew/socket_dist.
+
+Os arquivos chat_client.erl, chat_group.erl, chat_server.erl e io_widget.erl tiveram seus códigos modificados. Todos os outros estão inalterados.
+
+Utilização do chat (tela do usuário):
+Para enviar uma mensagem pessoal basta selecionar o destinatário (na segunda lista da direita para a esquerda, onde é possível ver o nick dos usuários), digitar a mensagem na caixa de texto da parte inferior e teclar 'Enter'. Para enviar uma mensagem para todos do grupo basta não ter nenhum destinatário selecionado (caso algum usuário esteja selecionado clique no botão 'Deselect'), digitar a mensagem na caixa de texto inferior e teclar 'Enter'.
+
+Breve descrição da implementação dos itens do EP:
+1) Foi utilizado o objeto Listbox do módulo gs, inserindo-o no packer.
+2) O GroupController gera uma lista com os nicks a partir da lista L de {Pid, Nick} toda vez que L é alterada (quando algum usuário faz login ou logout). Essa lista é então enviada para todos os usuários do grupo, que então substituem a lista do seu Listbox de nicks. 
+3) Toda vez que um grupo é adicionado ou removido da lista L de {Group,Pid} do servidor é gerada uma lista atualizada com os nomes dos grupos ainda presentes. Essa lista é enviada para todos os GroupControllers, que por sua vez a enviam para todos os seus usuários. O usuário então substitue a lista do seu Listbox de grupos (que é implementado de maneira análoga ao Listbox de nicks).
+4) Foi adicionado um botão para deselecionar os nicks do Listbox de nicks. A lista dos nicks selecionados é enviada para o cliente junto com o texto digitado. O cliente verifica se a lista é vazia. Caso seja o texto segue o fluxo normal (já existente anteriormente). Caso contrário ele envia uma mensagem para o GroupController indicando que aquele texto é uma mensagem pessoal. O GroupController então verifica se o destinatário é o mesmo usuário que enviou a mensagem. Caso não seja, ele envia a mensagem para o destinatário. Depois disso ele envia uma mensagem para o rementente para que a sua mensagem enviada também apareça para ele.  
