@@ -1,1 +1,13 @@
-Os EPs devem ser feitos em branches. A master a principio nao sera utilizada para nada.
+Andrew Toshiaki Nakayama Kurauchi
+nusp: 5894035
+Ep2 - Markov Decision Process e iteração por valor - Inteligência Artificial
+
+Arquivo de entrada:
+O labirinto considerado é sempre 5x5 e as suas posições são:
+(0,4) (1,4) (2,4) (3,4) (4,4)
+(0,3) (1,3) (2,3) (3,3) (4,3)
+(0,2) (1,2) (2,2) (3,2) (4,2)
+(0,1) (1,1) (2,1) (3,1) (4,1)
+(0,0) (1,0) (2,0) (3,0) (4,0)
+O arquivo de entrada deve ser formatado da seguinte maneira ({algo} deve ser substituido por um valor numérico):
+{}
