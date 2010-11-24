@@ -10,4 +10,18 @@ O labirinto considerado é sempre 5x5 e as suas posições são:
 (0,1) (1,1) (2,1) (3,1) (4,1)
 (0,0) (1,0) (2,0) (3,0) (4,0)
 O arquivo de entrada deve ser formatado da seguinte maneira ({algo} deve ser substituido por um valor numérico):
-{}
+{alvo_x} {alvo_y}
+{Número de pontos proibidos}
+{pontoProibido1_x} {pontoProibido1_y}
+{pontoProibido2_x} {pontoProibido2_y}
+...
+{pontoProibidoN_x} {pontoProibidoN_y}
+{posicaoInicial_x} {posicaoInicial_y}
+{Número de obstáculos}
+{obstáculo1_x} {obstáculo1_y}
+{obstáculo2_x} {obstáculo2_y}
+...
+{obstáculoN_x} {obstáculoN_y}
+{valor do prêmio por atingir o alvo}
+{punição por atingir o ponto proibido}
+{Custo de movimentação, ou recompensa dos estados não-terminais (nome utilizado no código)}
