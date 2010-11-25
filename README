@@ -2,6 +2,9 @@ Andrew Toshiaki Nakayama Kurauchi
 nusp: 5894035
 Ep2 - Markov Decision Process e iteração por valor - Inteligência Artificial
 
+Para rodar o programa, execute no diretório 'src' no terminal:
+$ python main.py nomeDoArquivoDeEntrada
+
 Arquivo de entrada:
 O labirinto considerado é sempre 5x5 e as suas posições são:
 (0,4) (1,4) (2,4) (3,4) (4,4)
@@ -43,3 +46,5 @@ O arquivo de entrada deve ser formatado da seguinte maneira ({algo} deve ser sub
 {probabilidade de ir para a direita do sentido escolhido (E)}
 {probabilidade de ir para a esquerda do sentido escolhido (W)}
 {probabilidade de ir para o sentido oposto do sentido escolhido (S)}
+
+Os resultados obtidos estão descritos no arquivo Relatorio.
