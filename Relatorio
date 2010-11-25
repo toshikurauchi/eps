@@ -1,0 +1,89 @@
+Os arquivos de entrada dos testes realizados se encontram no diretório 'entradas'.
+A configuração do labirinto (fixa entre todos os arquivos de teste) é a seguinte:
+Alvo: (4, 4)
+Ponto proibido: (4, 3)
+Posição inicial: (0, 0)
+Obstáculo: (1, 1)
+Abaixo se encontram as descrições específicas de cada arquivo:
+entrada1.in
+	Prêmio por atingir o alvo: 1.0
+	Punição por atingir o ponto proibido: -1.0
+	Custo de cada movimento: -0.04
+	Taxa de falha do robô (assumindo que a direção escolhida foi N):
+		N: 0.8
+		E: 0.1
+		W: 0.1
+		S: 0.0
+entrada2.in
+	Prêmio por atingir o alvo:  1.0
+	Punição por atingir o ponto proibido:  -10.0
+	Custo de cada movimento:  -0.04
+	Taxa de falha do robô (assumindo que a direção escolhida foi N):
+		N: 0.8
+		E: 0.1
+		W: 0.1
+		S: 0.0
+entrada3.in
+	Prêmio por atingir o alvo: 1.0
+	Punição por atingir o ponto proibido: -1.0
+	Custo de cada movimento: -0.04
+	Taxa de falha do robô (assumindo que a direção escolhida foi N):
+		N: 0.4
+		E: 0.2
+		W: 0.2
+		S: 0.2
+entrada4.in
+	Prêmio por atingir o alvo: 1000.0
+	Punição por atingir o ponto proibido: -10.0
+	Custo de cada movimento: -0.04
+	Taxa de falha do robô (assumindo que a direção escolhida foi N):
+		N: 0.4
+		E: 0.2
+		W: 0.2
+		S: 0.2
+entrada5.in
+	Prêmio por atingir o alvo: 1.0
+	Punição por atingir o ponto proibido: -10.0
+	Custo de cada movimento: -10.0
+	Taxa de falha do robô (assumindo que a direção escolhida foi N):
+		N: 0.4
+		E: 0.2
+		W: 0.2
+		S: 0.2
+
+Políticas obtidas:
+entrada1.in:
+	['>', '>',  '>', '>', '.']
+	['^', '^',  '^', '^', '.']
+	['^', '^',  '^', '^', '<']
+	['^', None, '^', '^', '<']
+	['^', '>',  '^', '^', '<']
+entrada2.in:
+	['>', '>',  '>', '>', '.']
+	['^', '^',  '^', '<', '.']
+	['^', '^',  '^', '^', 'v']
+	['^', None, '^', '^', '<']
+	['^', '>',  '^', '^', '<']
+entrada3.in:
+	['>', '>',  '>', '>', '.']
+	['>', '>',  '^', '<', '.']
+	['^', '>',  '^', '^', 'v']
+	['^', None, '^', '^', '<']
+	['>', '>',  '^', '^', '^']
+entrada4.in:
+	['>', '>',  '>', '>', '.']
+	['>', '>',  '^', '^', '.']
+	['^', '>',  '^', '^', '<']
+	['^', None, '^', '^', '<']
+	['^', '>',  '^', '^', '^']
+entrada5.in:
+	['>', '>',  '>', '>', '.']
+	['>', '>',  '>', '>', '.']
+	['^', '>',  '>', '^', '^']
+	['^', None, '^', '^', '^']
+	['>', '>',  '>', '^', '^']
+
+Conclusões:
+É possível observar que ao aumentar a punição por atingir o ponto proibido (da entrada1 para a entrada2), a política resultante se desvia do ponto proibido. Um resultado similar é obtido ao aumentar a taxa de erro na movimentação do robô (entrada1 para entrada3).
+Entretanto, se aplicarmos as duas mudanças (aumento da punição por atingir o ponto proibido e da taxa de erro na movimentação), mas aumentarmos consideravelmente o prêmio por atingir o alvo, a política gerada procura chegar o mais rápido possível no alvo (sem fugir do ponto proibido).
+Por fim, aplicando mais uma vez as duas mudanças, mas aumentando o custo de cada movimento é possível observar que a política gerada leva a qualquer ponto terminal (alvo ou ponto proibido).

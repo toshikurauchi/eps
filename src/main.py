@@ -44,7 +44,7 @@ def main():
     "Generate grid"
     grid = generate_grid(targets, forbidden, obstacles, target_reward, forbidden_reward, movement_reward)
     "Print info (used for debugging)"
-    print_info(False, targets, forbidden, start, obstacles, target_reward, forbidden_reward, movement_reward, probabilities, grid)
+    print_info(True, targets, forbidden, start, obstacles, target_reward, forbidden_reward, movement_reward, probabilities, grid)
     "Calculate best policy"
     grid_mdp = mdp.GridMDP(grid, terminals, start, probabilities)
     U = mdp.value_iteration(grid_mdp, 0.1)
@@ -65,10 +65,11 @@ def generate_grid(targets, forbidden_states, obstacles, target_reward, forbidden
     return grid
 
 def verify_probabilities(probabilities):
+    epsilon = 0.0001
     sum = 0
     for p in probabilities:
         sum += p
-    return sum == 1
+    return sum > 1.0 - epsilon and sum < 1.0 + epsilon
 
 def print_info(should_print, targets, forbidden, start, obstacles, target_reward, forbidden_reward, movement_reward, probabilities, grid):
     if(not should_print):
