@@ -38,6 +38,8 @@ def main():
     probabilities = []
     for i in range(4):
         probabilities.append(float(input_file.readline()))
+    if(not verify_probabilities(probabilities)):
+        sys.exit('The sum of all probabilities must be 1')
     input_file.close()
     grid = generate_grid(targets, forbidden, obstacles, target_reward, forbidden_reward, movement_reward)
     print 'Targets: ', number_of_targets
@@ -55,7 +57,7 @@ def main():
     print 'Grid: '
     for line in grid:
         print line
-    grid_mdp = mdp.GridMDP(grid, terminals, start)
+    grid_mdp = mdp.GridMDP(grid, terminals, start, probabilities)
     U = mdp.value_iteration(grid_mdp, 0.1)
     pi = mdp.best_policy(grid_mdp, U)
     for line in grid_mdp.to_arrows(pi):
@@ -72,6 +74,12 @@ def generate_grid(targets, forbidden_states, obstacles, target_reward, forbidden
         grid[obstacle[1]][obstacle[0]] = None
     grid.reverse()
     return grid
+
+def verify_probabilities(probabilities):
+    sum = 0
+    for p in probabilities:
+        sum += p
+    return sum == 1
 
 if __name__ == '__main__':
     sys.exit(main())
