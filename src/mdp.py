@@ -44,8 +44,9 @@ class GridMDP(MDP):
     specify the grid as a list of lists of rewards; use None for an obstacle
     (unreachable state).  Also, you should specify the terminal states.
     An action is an (x, y) unit vector; e.g. (1, 0) means move east."""
-    def __init__(self, grid, terminals, init=(0, 0), gamma=.9):
+    def __init__(self, grid, terminals, init=(0, 0), probabilities=[0.8, 0.1, 0.1, 0.0], gamma=.9):
         grid.reverse() ## because we want row 0 on bottom, not on top
+        self.probabilities = probabilities ## [up, right, left, down]
         MDP.__init__(self, init, actlist=orientations, 
                      terminals=terminals, gamma=gamma)
         update(self, grid=grid, rows=len(grid), cols=len(grid[0]))
@@ -57,11 +58,11 @@ class GridMDP(MDP):
 
     def T(self, state, action):
         if action == None:
-            return [(0.0, state)]
+            return [(self.probabilities[3], state)]
         else:
-            return [(0.8, self.go(state, action)),
-                    (0.1, self.go(state, turn_right(action))),
-                    (0.1, self.go(state, turn_left(action)))]
+            return [(self.probabilities[0], self.go(state, action)),
+                    (self.probabilities[1], self.go(state, turn_right(action))),
+                    (self.probabilities[2], self.go(state, turn_left(action)))]
 
     def go(self, state, direction):
         "Return the state that results from going in this direction."
@@ -138,34 +139,3 @@ def policy_evaluation(pi, U, mdp, k=20):
         for s in mdp.states:
             U[s] = R(s) + gamma * sum([p * U[s1] for (p, s1) in T(s, pi[s])])
     return U
-
-__doc__ += """
->>> pi = best_policy(Fig[17,1], value_iteration(Fig[17,1], .01))
-
->>> Fig[17,1].to_arrows(pi)
-[['>', '>', '>', '.'], ['^', None, '^', '.'], ['^', '>', '^', '<']]
-
->>> print_table(Fig[17,1].to_arrows(pi))
->   >      >   .  
-^   None   ^   .  
-^   >      ^   <  
-
->>> print_table(Fig[17,1].to_arrows(policy_iteration(Fig[17,1])))
->   >      >   .  
->   None   <   .  
->   >      >   v  
-"""
-
-__doc__ += random_tests("""
->>> pi
-{(3, 2): None, (3, 1): None, (3, 0): (-1, 0), (2, 1): (0, 1), (0, 2): (1, 0), (1, 0): (1, 0), (0, 0): (0, 1), (1, 2): (1, 0), (2, 0): (0, 1), (0, 1): (0, 1), (2, 2): (1, 0)}
-
->>> value_iteration(Fig[17,1], .01)
-{(3, 2): 1.0, (3, 1): -1.0, (3, 0): 0.12958868267972745, (0, 1): 0.39810203830605462, (0, 2): 0.50928545646220924, (1, 0): 0.25348746162470537, (0, 0): 0.29543540628363629, (1, 2): 0.64958064617168676, (2, 0): 0.34461306281476806, (2, 1): 0.48643676237737926, (2, 2): 0.79536093684710951}
-
->>> policy_iteration(Fig[17,1])
-{(3, 2): None, (3, 1): None, (3, 0): (0, -1), (2, 1): (-1, 0), (0, 2): (1, 0), (1, 0): (1, 0), (0, 0): (1, 0), (1, 2): (1, 0), (2, 0): (1, 0), (0, 1): (1, 0), (2, 2): (1, 0)}
- 
-""")
-
-

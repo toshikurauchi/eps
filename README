@@ -39,3 +39,7 @@ O arquivo de entrada deve ser formatado da seguinte maneira ({algo} deve ser sub
 {valor do prêmio por atingir o alvo}
 {punição por atingir o ponto proibido}
 {Custo de movimentação, ou recompensa dos estados não-terminais (nome utilizado no código)}
+{probabilidade de andar no sentido escolhido}
+{probabilidade de ir para a direita do sentido escolhido}
+{probabilidade de ir para a esquerda do sentido escolhido}
+{probabilidade de ir para o sentido oposto do sentido escolhido}
