@@ -41,22 +41,11 @@ def main():
     if(not verify_probabilities(probabilities)):
         sys.exit('The sum of all probabilities must be 1')
     input_file.close()
+    "Generate grid"
     grid = generate_grid(targets, forbidden, obstacles, target_reward, forbidden_reward, movement_reward)
-    print 'Targets: ', number_of_targets
-    print 'Target array: ', targets
-    print 'Forbidden states: ', number_of_forbiddens
-    print 'Forbidden: ', forbidden
-    print 'Terminals: ', terminals
-    print 'Start: ', start
-    print 'Obstacles: ', number_of_obstacles
-    print 'Obstacle array: ', obstacles
-    print 'Target reward: ', target_reward
-    print 'Forbidden reward: ', forbidden_reward
-    print 'Movement reward: ', movement_reward
-    print 'Probabilities: ', probabilities
-    print 'Grid: '
-    for line in grid:
-        print line
+    "Print info (used for debugging)"
+    print_info(False, targets, forbidden, start, obstacles, target_reward, forbidden_reward, movement_reward, probabilities, grid)
+    "Calculate best policy"
     grid_mdp = mdp.GridMDP(grid, terminals, start, probabilities)
     U = mdp.value_iteration(grid_mdp, 0.1)
     pi = mdp.best_policy(grid_mdp, U)
@@ -80,6 +69,21 @@ def verify_probabilities(probabilities):
     for p in probabilities:
         sum += p
     return sum == 1
+
+def print_info(should_print, targets, forbidden, start, obstacles, target_reward, forbidden_reward, movement_reward, probabilities, grid):
+    if(not should_print):
+        return
+    print 'Targets: ', targets
+    print 'Forbidden states: ', forbidden
+    print 'Initial state: ', start
+    print 'Obstacles: ', obstacles
+    print 'Target reward: ', target_reward
+    print 'Forbidden reward: ', forbidden_reward
+    print 'Movement reward (cost): ', movement_reward
+    print 'Probabilities: ', probabilities
+    print 'Grid: '
+    for line in grid:
+        print line
 
 if __name__ == '__main__':
     sys.exit(main())
