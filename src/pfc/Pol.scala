@@ -3,6 +3,18 @@ package pfc
 private case class Term(coef: Double, exp: Int) {
   require(coef != 0 && exp >= 0)
   def compareExp(that: Term) = this.exp - that.exp
+
+  override def toString = {
+    var string = ""
+    if ((this.coef != 1 && this.coef != -1) || this.exp == 0) {
+      string += this.coef.abs
+    }
+    if (this.exp != 0) {
+      string += "x"
+      if (this.exp != 1) string += "^" + this.exp
+    }
+    string
+  }
 }
 
 class Pol private (private val terms: List[Term]) {
@@ -12,29 +24,30 @@ class Pol private (private val terms: List[Term]) {
   private def this(coef: Double, exp: Int) = this(List(Term(coef, exp)))
 
   // aritmetica de polinomios
-  def + (that: Pol): Pol = Pol(Pol.add(this.terms, that.terms))
-  def - (that: Pol): Pol = Pol(Pol.add(this.terms, (-that).terms))
-  def * (that: Pol): Pol = this
-  def / (that: Pol): Tuple2[Pol, Pol] = new Tuple2(this, this)
+  def +(that: Pol): Pol = Pol(Pol.add(this.terms, that.terms))
+  def -(that: Pol): Pol = Pol(Pol.add(this.terms, (-that).terms))
+  def *(that: Pol): Pol = this
+  def /(that: Pol): Tuple2[Pol, Pol] = new Tuple2(this, this)
 
   // operadores unarios
   def unary_+ : Pol = this
   def unary_- : Pol = {
-	  var negTerms:List[Term] = List()
-	  for(term <- this.terms) {
-	 	  negTerms = negTerms++List(Term(-term.coef, term.exp))
-	  }
-	  Pol(negTerms)
+    var negTerms: List[Term] = List()
+    for (term ← this.terms) {
+      negTerms = negTerms ++ List(Term(-term.coef, term.exp))
+    }
+    Pol(negTerms)
   }
 
   // aritmetica mista (o operando 1 e' um polinomio, o operando 2 e' um numero)
-  def + (d: Double): Pol = this
-  def - (d: Double): Pol = this
-  def * (d: Double): Pol = this
-  def / (d: Double): Pol = this
+  def +(d: Double): Pol = this + Pol(d)
+  def -(d: Double): Pol = this - Pol(d)
+  def *(d: Double): Pol = this * Pol(d)
+  def /(d: Double): Pol = (this / Pol(d))_1
 
   // grau, potenciacao e derivacao
-  def degree: Int = 0
+  def degree: Int = if(this.terms.isEmpty) 0
+  					else this.terms.head.exp
   def ^(n: Int): Pol = this
   def deriv: Pol = this
   def ! : Pol = this
@@ -49,30 +62,22 @@ class Pol private (private val terms: List[Term]) {
   override def equals(other: Any): Boolean = true
   override def hashCode: Int = 0
   override def toString = {
-	  var string = ""
-	  
-	  for(term <- this.terms) {
-	 	  string += formatedString(term)
-  	  }
-  	  string
-  }
-  private def formatedString(term: Term) = {
-	var string = ""
-	if(term.coef != 1 || term.exp == 0) {
-	  if(term.coef == -1 && term.exp != 0)
-		string += "-"
-	  else
-		string += term.coef
-	}
-	if(term.exp != 0) {
-	  string += "x"
-	  if(term.exp != 1) string += "^" + term.exp
-	}
-	string
+    var string = ""
+
+    if (!terms.isEmpty) {
+    	if(terms.head.coef < 0) string += "-"
+    	string += terms.head
+    }
+    for (term ← this.terms.tail) {
+      if (term.coef < 0) string += " - "
+      else string += " + "
+      string += term
+    }
+    string
   }
 
   // metodo auxiliar que multiplica o polinomio alvo por um termo simples
-  private def * (term: Term): Pol = new Pol(Nil)
+  private def *(term: Term): Pol = new Pol(Nil)
 }
 
 object Pol {
@@ -89,16 +94,18 @@ object Pol {
 
   // metodo auxiliar para as operacoes de adicao e subtracao de polinomios
   private def add(terms1: List[Term], terms2: List[Term]): List[Term] = add(terms1, terms2, List())
-  
+
   private def add(terms1: List[Term], terms2: List[Term], Acc: List[Term]): List[Term] = {
-	  terms1 match {
-	 	  case List() => Acc++terms2
-	 	  case _ => terms2 match {
-	 	 	  case List() => Acc++terms1
-	 	 	  case _ => if(terms1.head.compareExp(terms2.head) == 0) add(terms1.tail, terms2.tail, Acc++List(Term(terms1.head.coef + terms2.head.coef, terms1.head.exp)))
-	 	 	  			else if(terms1.head.compareExp(terms2.head) < 0) add(terms1, terms2.tail, Acc++List(terms2.head))
-	 	 	  			else add(terms1.tail, terms2, Acc++List(terms1.head))
-	 	  }
-	  }
+    terms1 match {
+      case List() ⇒ Acc ++ terms2
+      case _ ⇒
+        terms2 match {
+          case List() ⇒ Acc ++ terms1
+          case _ ⇒
+            if (terms1.head.compareExp(terms2.head) == 0) add(terms1.tail, terms2.tail, Acc ++ List(Term(terms1.head.coef + terms2.head.coef, terms1.head.exp)))
+            else if (terms1.head.compareExp(terms2.head) < 0) add(terms1, terms2.tail, Acc ++ List(terms2.head))
+            else add(terms1.tail, terms2, Acc ++ List(terms1.head))
+        }
+    }
   }
 }
