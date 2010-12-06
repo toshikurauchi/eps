@@ -3,6 +3,11 @@ package pfc
 private case class Term(coef: Double, exp: Int) {
   require(coef != 0 && exp >= 0)
   def compareExp(that: Term) = this.exp - that.exp
+  
+  override def equals(other: Any): Boolean = other match {
+											  case that:Term => this.coef == that.coef && this.exp == that.exp
+											  case _ => false
+											}
 
   override def toString = {
     var string = ""
@@ -59,7 +64,10 @@ class Pol private (private val terms: List[Term]) {
   def apply(that: Pol): Pol = this
 
   // sobrescrita de metodos da classe Any
-  override def equals(other: Any): Boolean = true
+  override def equals(other: Any): Boolean = other match {
+											  case that:Pol => (this.terms -- that.terms).isEmpty
+											  case _ => false
+											}
   override def hashCode: Int = 0
   override def toString = {
     var string = ""
